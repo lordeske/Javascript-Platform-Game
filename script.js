@@ -99,4 +99,109 @@ class Player {
 
 }
 
+
 const player = new Player();
+
+
+
+const animate = () => {  /// player movement  animation  by pressing keys
+
+    requestAnimationFrame(animate);
+    ctx.clearRect(0, 0, canvas.width, canvas.height); //clearing old canvas
+    player.update();
+
+    if (keys.rightKey.pressed  && player.position.x < proportionalSize(400))   /// speding up by pressing key
+    {
+        player.velocity.x = 5;
+        
+    }
+    else if (keys.leftKey.pressed && player.position.x > proportionalSize(100))    // stopping by pressing key
+    {
+        player.velocity.x = -5;
+    }
+    else {      // not moving
+        player.velocity.x = 0;   
+    }
+}
+
+
+const keys = {     // player action keys 
+    rightKey : { pressed : false},
+    leftKey : {pressed : false}
+
+}
+
+
+const movePlayer = (key,xVelocity, isPressed)  => {
+
+    if(!isCheckpointCollisionDetectionActive)
+    {
+        player.velocity.x = 0;
+        player.velocity.y = 0;
+        return;
+    }
+
+    switch (key){
+
+        case  "ArrowLeft" : ///going left 
+            keys.leftKey.pressed = isPressed 
+            if (xVelocity === 0)
+            {
+                player.velocity.x = xVelocity;
+            }
+            player.velocity.x -= xVelocity;
+            break;
+
+
+
+        case  "Spacebar" : /// jumping 
+            player.velocity.y -= 8;
+            break;
+
+        case  " " :  /// jumping 
+            player.velocity.y -= 8; 
+            break;
+
+        case  "ArrowUp" : /// jumping 
+            player.velocity.y -= 8;
+            break;
+
+
+        case  "ArrowRight" : /// going right 
+           keys.rightKey.pressed = isPressed;
+           if(xVelocity ===0)
+           {
+            player.velocity.x = xVelocity;
+
+           }
+           player.velocity.x += xVelocity;
+    }
+
+}
+
+
+
+
+const startGame = () => {
+
+    canvas.style.display = "block";
+    startScreen.style.display= "none";
+    animate();
+
+}
+
+startBtn.addEventListener("click", startGame)
+
+
+window.addEventListener("keydown" , ({key})=>{
+
+    movePlayer(key,8, true);
+
+})
+
+
+window.addEventListener("keyup", ({key})=>{
+
+    movePlayer(key, 0,false);
+
+})
