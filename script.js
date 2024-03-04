@@ -126,6 +126,29 @@ class Player {
 }
 
 
+class CheckPoint {
+    constructor(x,y,z){
+        this.position = {
+            x,
+            y,
+        }
+
+        this.width = proportionalSize(40);
+        this.height = proportionalSize(70);
+
+
+
+
+    }
+
+
+
+}
+
+
+
+
+
 const player = new Player();
 
 
@@ -180,6 +203,67 @@ const animate = () => {  /// player movement  animation  by pressing keys
     else {      // not moving
         player.velocity.x = 0;   
     }
+
+
+
+    if(keys.rightKey.pressed && isCheckpointCollisionDetectionActive)  /// moving screen right
+    {
+
+        platforms.forEach((platform)=>{
+
+            platform.position.x -=5;
+            
+        })
+
+
+    }
+    else if (keys.leftKey.pressed && isCheckpointCollisionDetectionActive)   // moving screen left
+    {
+        platforms.forEach((platform)=>{
+
+            platform.position.x +=5;
+            
+        })
+    }
+
+
+
+    platforms.forEach((platform) => {
+
+        const collisionDetectionRules = [   /// uper collision
+            player.position.y + player.height <= platform.position.y,
+            player.position.y + player.height + player.velocity.y >= platform.position.y,
+            player.position.x >= platform.position.x - player.width/2,
+            player.position.x <= platform.position.x + platform.width - player.width / 3,
+        ];
+
+
+        if (collisionDetectionRules.every((rule)=> rule === true))
+        {
+
+            player.velocity.y = 0;
+            return;
+
+        }  
+
+        const platformDetectionRules = [      /// down colision
+            player.position.x >= platform.position.x - player.width / 2,
+            player.position.x <=
+            platform.position.x + platform.width - player.width / 3,
+            player.position.y + player.height >= platform.position.y,
+            player.position.y <= platform.position.y + platform.height,
+        ];
+
+        if(platformDetectionRules.every((rule)=> rule))
+        {
+            player.position.y = platform.position.y + player.height;
+            player.velocity.y = gravity;
+            
+        }
+        
+
+
+    })
 }
 
 
