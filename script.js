@@ -25,6 +25,32 @@ const proportionalSize = (size) => {  /// setting size of screen with proportion
 
 }
 
+class Platform {    /// Platforms UI
+    constructor(x,y){
+       this.position = {
+            x,
+            y,
+        }
+
+        this.width = 200;
+        this.height = proportionalSize(40);
+
+
+    }
+
+    draw(){
+        ctx.fillStyle = "#acd157";
+        ctx.fillRect(this.position.x, this.position.y,  this.width,this.height);
+
+
+    };
+
+
+
+}    
+
+
+
 class Player {
     constructor(){
         this.position = {    /// player position
@@ -104,10 +130,42 @@ const player = new Player();
 
 
 
+const platformPositions  = [    /// Platform postition
+
+  
+{ x: 500, y: proportionalSize(450) },
+{ x: 700, y: proportionalSize(400) },
+{ x: 850, y: proportionalSize(350) },
+{ x: 900, y: proportionalSize(350) },
+{ x: 1050, y: proportionalSize(150) },
+{ x: 2500, y: proportionalSize(450) },
+{ x: 2900, y: proportionalSize(400) },
+{ x: 3150, y: proportionalSize(350) },
+{ x: 3900, y: proportionalSize(450) },
+{ x: 4200, y: proportionalSize(400) },
+{ x: 4400, y: proportionalSize(200) },
+{ x: 4700, y: proportionalSize(150) },
+    
+    
+
+];
+
+
+const platforms  = platformPositions.map((platform)=> new Platform(platform.x, platform.y)); /// creating new plaform with given positions 
+
+
+
+
 const animate = () => {  /// player movement  animation  by pressing keys
 
     requestAnimationFrame(animate);
     ctx.clearRect(0, 0, canvas.width, canvas.height); //clearing old canvas
+    platforms.forEach((platform)=>{
+
+        platform.draw();
+
+    })
+
     player.update();
 
     if (keys.rightKey.pressed  && player.position.x < proportionalSize(400))   /// speding up by pressing key
